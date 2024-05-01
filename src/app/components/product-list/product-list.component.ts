@@ -12,12 +12,21 @@ export class ProductListComponent implements OnInit {
 
   products: Product[] = [];
   currentCategoryId: number = 1;
+  previousCategoryId: number = 1;
   searchMode: boolean = false;
+
+  // new properties for pagination
+
+  thePageNumber: number = 1;
+  thePageSize: number = 5;
+  theTotalElements: number = 0;
+
+  previousKeyWord: string = "";
 
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(param => {
@@ -26,7 +35,7 @@ export class ProductListComponent implements OnInit {
   }
   listProducts() {
     this.searchMode = this.route.snapshot.paramMap.has('keyword');
-    if(this.searchMode) {
+    if (this.searchMode) {
       this.handleSearchProducts();
     } else {
       this.handleListProduct();
@@ -34,12 +43,20 @@ export class ProductListComponent implements OnInit {
   }
   handleSearchProducts() {
     const theKeyWord: string = this.route.snapshot.paramMap.get('keyword')!;
+    /* if we have a different keyword than previous
+    then set the thePageNumber to 1 */
+    if (this.previousKeyWord !== theKeyWord) {
+      this.thePageNumber = 1;
+    }
+
+    this.previousKeyWord = theKeyWord;
+
+    console.log(`keyword=${theKeyWord}, thePageNumber=${this.thePageNumber}`);
 
     // now search for the products using the keyword
-    this.productService.serachProducts(theKeyWord).subscribe(data => {
-        this.products = data;
-      }
-    );
+    this.productService.searchProductListPaginate(this.thePageNumber - 1, this.thePageSize, theKeyWord).subscribe(
+      this.processResult()
+    )
   }
 
   handleListProduct() {
@@ -50,9 +67,39 @@ export class ProductListComponent implements OnInit {
     else use "1" as default*/
     this.currentCategoryId = hasCategoryId ? +this.route.snapshot.paramMap.get('id')! : 1;
 
-    this.productService.getProductList(this.currentCategoryId).subscribe(data => {
-      this.products = data;
-    });
+    if (this.previousCategoryId !== this.currentCategoryId) {
+      this.thePageNumber = 1;
+    }
+    this.previousCategoryId = this.currentCategoryId;
+
+    console.log(`currentCategoryId=${this.currentCategoryId}, thePageNumber=${this.thePageNumber}`);
+
+    /*now get the products for the given category id */
+    this.productService.getProductListPaginate(this.thePageNumber - 1, //decreased by 1 as in spring sequence start from '0'
+      this.thePageSize,
+      this.currentCategoryId
+    ).subscribe(
+      this.processResult()
+    );
   }
+  updatePageSize(pageSize: string) {
+    this.thePageSize = +pageSize;
+    this.thePageNumber = 1;
+    this.listProducts();
+  }
+
+  processResult() {
+    return (data: any) => {
+      this.products = data._embedded.products;
+      this.thePageNumber = data.page.number + 1;
+      this.thePageSize = data.page.size;
+      this.theTotalElements = data.page.totalElements;
+    }
+  }
+
+  addToCart(theProduct: Product) {
+    console.log(`Adding to cart: ${theProduct.name}, ${theProduct.unitPrice}`);
+    
+    }
 
 }
