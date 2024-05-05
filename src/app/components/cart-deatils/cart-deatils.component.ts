@@ -7,7 +7,7 @@ import { CartService } from '../../services/cart.service';
   templateUrl: './cart-deatils.component.html',
   styleUrl: './cart-deatils.component.css'
 })
-export class CartDeatilsComponent implements OnInit{
+export class CartDeatilsComponent implements OnInit {
 
   cartItem: CartItem[] = [];
 
@@ -16,7 +16,7 @@ export class CartDeatilsComponent implements OnInit{
 
   constructor(
     private cartService: CartService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.listCartDetails();
@@ -37,11 +37,11 @@ export class CartDeatilsComponent implements OnInit{
   }
   decrementQuantity(theCartItem: CartItem) {
     this.cartService.decrementQuantity(theCartItem);
-    }
-    incrementQuantity(theCartItem: CartItem) {
-      this.cartService.addToCart(theCartItem);
-    }
-    remove(theCartItem: CartItem) {
-      this.cartService.remove(theCartItem);
-      }
+  }
+  incrementQuantity(theCartItem: CartItem) {
+    this.cartService.addToCart(theCartItem);
+  }
+  remove(theCartItem: CartItem) {
+    this.cartService.remove(theCartItem);
+  }
 }
