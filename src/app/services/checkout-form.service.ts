@@ -23,14 +23,14 @@ export class CheckoutFormService {
   }
   getStates(theCountryCode: string): Observable<State[]> {
     //search url
-    let searchStatesUrl = `${this.statesUrl}/search/findByCountryCode?code=${theCountryCode}`;
+    const searchStatesUrl = `${this.statesUrl}/search/findByCountryCode?code=${theCountryCode}`;
     return this.httpClient.get<GetResponseStates>(searchStatesUrl).pipe(
       map(response => response._embedded.states)
     )
   }
 
   getCreditCardMonths(startMonth: number): Observable<number[]> {
-    let data: number[] = [];
+    const data: number[] = [];
 
     //build an array for "Month" drop down list
     // -start at current month & loop until 12 months
@@ -42,7 +42,7 @@ export class CheckoutFormService {
     return of(data);
   }
   getCreditCardYear(): Observable<number[]> {
-    let data: number[] = [];
+    const data: number[] = [];
 
     //build an array for "Year" drop down list
     // -start at current Year & loop until next 10 year
