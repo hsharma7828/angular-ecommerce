@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@angular/core';
 import { CartItem } from '../common/cart-item';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -12,7 +13,13 @@ export class CartService {
   totalPrice: Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
 
-  constructor() { }
+
+  storage: Storage = sessionStorage;
+
+  constructor() { 
+    //read the data from the storage
+    const data = JSON.parse(this.storage.getItem('cartItem'));
+  }
 
   addToCart(theCartItem: CartItem) {
     /* check if we already have item in the cart*/

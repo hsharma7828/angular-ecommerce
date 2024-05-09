@@ -15,6 +15,7 @@ export class CheckoutService {
   ) { }
 
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   placeOrder(purchase: Purchase): Observable<any> {
     return this.httpClient.post<Purchase>(this.purchaseUrl, purchase);
   }

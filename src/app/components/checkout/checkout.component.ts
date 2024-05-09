@@ -181,6 +181,7 @@ export class CheckoutComponent implements OnInit {
 
 
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   copyShippingAddressToBillingAddress(event: any) {
     if (event.target.checked) {
       this.checkoutFormGroup.controls['billingAddress'].setValue(
@@ -208,7 +209,7 @@ export class CheckoutComponent implements OnInit {
     console.log(`The Shipping Address State: ${this.checkoutFormGroup.get('shippingAddress')?.value.state.name}`);
 
     /* set up order */
-    let order = new Order();
+    const order = new Order();
     order.totalPrice = this.totalPrice;
     order.totalQuantity = this.totalQuantity;
 
@@ -216,10 +217,10 @@ export class CheckoutComponent implements OnInit {
     const cartItems = this.cartService.cartItems;
 
     /* create orderItems from cartItems */
-    let orderItems: OrderItem[] = cartItems.map(tempItem => new OrderItem(tempItem));
+    const orderItems: OrderItem[] = cartItems.map(tempItem => new OrderItem(tempItem));
 
     /* set up purchase */
-    let purchse = new Purchase();
+    const purchse = new Purchase();
 
     /* populate purchase - customer */
     purchse.customer = this.checkoutFormGroup.controls['customer'].value;
@@ -281,8 +282,7 @@ export class CheckoutComponent implements OnInit {
 
     // if the current year equal the selected currentYear, then start with the current month 
 
-    let startMonth: number;
-    startMonth = currentYear === selectedYear ? new Date().getMonth() + 1 : 1;
+    const startMonth: number = currentYear === selectedYear ? new Date().getMonth() + 1 : 1;
 
     this.checkoutFormService.getCreditCardMonths(startMonth).subscribe(
       data => {
