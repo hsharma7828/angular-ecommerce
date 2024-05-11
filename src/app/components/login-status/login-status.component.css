@@ -9,6 +9,9 @@
     border-radius:20px;
     background:#205b8d
 }
+.btn-margin {
+    margin-right: 5px !important;
+}
 
 .login-status-header {
     display:-webkit-box;
