@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@angular/core';
 import { OKTA_AUTH } from '@okta/okta-angular';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { Observable, from, lastValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,8 @@ export class AuthInterceptorService implements HttpInterceptor {
   }
   private async handleAccess(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
     // Only add an access token for secured endpoints
-    const securedEnpoints = ['http://localhost:8080/api/orders'];
+    const theEndpoit = environment.myCartUrl + '/orders';
+    const securedEnpoints = [theEndpoit];
 
     if (securedEnpoints.some(url => request.urlWithParams.includes(url))) {
       //get the accesss token
